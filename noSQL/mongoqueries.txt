@@ -1,0 +1,18 @@
+Scipts das querys a executar para verificação dos requisitos pedidos pelos Clientes
+
+------------------------------- QUERY 1 ------------------------------- 
+
+db.ReservaCollection.find({"data inicio": {$gte: ISODate("2018-11-26")},"data fim":{$lt: ISODate("2018-11-27")}},{Veiculo:1,Cliente:1}).pretty()
+
+
+------------------------------- QUERY 2 ------------------------------- 
+
+db.ParqueCollection.aggregate([{$match:{distrito:"Braga"}},{$project:{Lugares:{$filter:{input: "$Lugares",as: "lugar", cond: {$eq: ["$$lugar.ocupado",0]}}}}}]).pretty()
+
+------------------------------- QUERY 3 ------------------------------- 
+
+db.ReservaCollection.aggregate([{$group:{_id:{}, Amount:{$sum: {$add: ["$Pagamento.preco","$Pagamento.multa"]}}}}])
+
+------------------------------- QUERY 4 ------------------------------- 
+
+db.ReservaCollection.find({"Pagamento.multa": {$gt: 0}}).pretty()
